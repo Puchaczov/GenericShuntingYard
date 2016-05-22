@@ -58,7 +58,7 @@ namespace UsefullAlgorithms.Tests
             var tokens = converter.Parse("1 and test ( )");
 
             Assert.AreEqual("1", tokens[0]);
-            Assert.AreEqual("test", tokens[1]);
+            Assert.AreEqual("test_0", tokens[1]);
             Assert.AreEqual("and", tokens[2]);
 
             tokens = converter.Parse("1 and test ( 1 , 2 , 3 )");
@@ -67,8 +67,24 @@ namespace UsefullAlgorithms.Tests
             Assert.AreEqual("1", tokens[1]);
             Assert.AreEqual("2", tokens[2]);
             Assert.AreEqual("3", tokens[3]);
-            Assert.AreEqual("test", tokens[4]);
+            Assert.AreEqual("test_3", tokens[4]);
             Assert.AreEqual("and", tokens[5]);
+        }
+
+        [TestMethod]
+        public void TestFunctionCall_ShouldPass()
+        {
+            BooleanExpressionInfixToPostfix converter = new BooleanExpressionInfixToPostfix();
+
+            var tokens = converter.Parse("p ( 2 and 4 , ( 1 or 3 ) and 5 )");
+        }
+
+        [TestMethod]
+        public void TestFunctionCall_NestedArgs_ShouldPass()
+        {
+            BooleanExpressionInfixToPostfix converter = new BooleanExpressionInfixToPostfix();
+
+            var tokens = converter.Parse("p ( 2 and 4 , r ( 1 ) , t ( 3 , 2 ) )");
         }
     }
 }

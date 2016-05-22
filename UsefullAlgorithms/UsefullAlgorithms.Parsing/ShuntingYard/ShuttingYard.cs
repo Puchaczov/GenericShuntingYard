@@ -12,22 +12,26 @@ namespace UsefullAlgorithms.Parsing.ExpressionParsing
 
     /// <summary>
     /// Implementation based on https://en.wikipedia.org/wiki/Shunting-yard_algorithm
+    /// Idea how to handle function call based on this whole topic: http://stackoverflow.com/questions/29348246/how-to-count-number-of-arguments-of-a-method-while-converting-infix-expression-t
     /// </summary>
     /// <typeparam name="TExpression"></typeparam>
     /// <typeparam name="TToken"></typeparam>
     public abstract class ShuntingYard<TExpression, TToken>
         where TExpression : IEnumerable
-        where TToken : IComparable, IComparable<TToken>, IEquatable<TToken>
+        where TToken : IEquatable<TToken>
     {
 
-        protected readonly Dictionary<TToken, PrecedenceAssociativity> operators;
+        private class FunctionArgs
+        {
+            public int ArgsCount { get; set; }
+            public TToken Name { get; set; }
+        }
 
-        public Dictionary<TToken, int> FunctionArgsCount { get; }
+        protected readonly Dictionary<TToken, PrecedenceAssociativity> operators;
 
         public ShuntingYard()
         {
             operators = new Dictionary<TToken, PrecedenceAssociativity>();
-            FunctionArgsCount = new Dictionary<TToken, int>();
         }
 
         public ShuntingYard(params KeyValuePair<TToken, PrecedenceAssociativity>[] rules)
@@ -42,10 +46,11 @@ namespace UsefullAlgorithms.Parsing.ExpressionParsing
 
         protected TToken[] InfixToPostfix(IEnumerable<TToken> expression)
         {
-            FunctionArgsCount.Clear();
-
             List<TToken> output = new List<TToken>();
             Stack<TToken> stack = new Stack<TToken>();
+            Stack<FunctionArgs> argsOccurence = new Stack<FunctionArgs>();
+
+            bool commaOccured = false;
 
             foreach (var token in expression)
             {
@@ -78,20 +83,31 @@ namespace UsefullAlgorithms.Parsing.ExpressionParsing
                         output.Add(stack.Pop());
                     }
                     stack.Pop();
-                    if(!stack.IsEmpty() && IsWord(stack.Peek()) && !IsOperator(stack.Peek()))
+                    if(!stack.IsEmpty() && IsFunction(stack.Peek()))
                     {
-                        output.Add(stack.Pop());
+                        stack.Pop();
+
+                        var fun = argsOccurence.Pop();
+                        output.Add(RenameFunctionToHaveArgsCount(fun.Name, fun.ArgsCount + (commaOccured ? 1 : 0)));
                     }
                 }
-                else if (IsWord(token) && !IsOperator(token))
+                else if (IsFunction(token))
                 {
                     stack.Push(token);
+
+                    commaOccured = false;
+                    argsOccurence.Push(new FunctionArgs{ Name = token, ArgsCount = 0 });
                 }
                 else if(IsComma(token))
                 {
+                    commaOccured = true;
                     while(!stack.IsEmpty() && !IsLeftParenthesis(stack.Peek()))
                     {
                         output.Add(stack.Pop());
+                    }
+                    if(!argsOccurence.IsEmpty())
+                    {
+                        argsOccurence.Peek().ArgsCount += 1;
                     }
                 }
                 else
@@ -107,15 +123,15 @@ namespace UsefullAlgorithms.Parsing.ExpressionParsing
             return output.ToArray();
         }
 
-        internal abstract bool IsComma(TToken token);
-        internal abstract bool IsWord(TToken token);
+        protected abstract bool IsComma(TToken token);
+        protected abstract bool IsWord(TToken token);
         protected abstract bool IsSkippable(TToken token);
 
         protected abstract bool IsRightParenthesis(TToken token);
         protected abstract bool IsLeftParenthesis(TToken token);
 
         protected bool IsAssociative(TToken token, Associativity associativity) => IsOperator(token) && operators[token].Associativity == associativity;
-        protected bool IsOperator(TToken token) => operators.ContainsKey(token);
+        protected virtual bool IsOperator(TToken token) => operators.ContainsKey(token);
 
         protected int TestPrecedence(TToken token1, TToken token2)
         {
@@ -125,5 +141,9 @@ namespace UsefullAlgorithms.Parsing.ExpressionParsing
             }
             throw new ArgumentException("One of arguments isn't operator");
         }
+
+        private bool IsFunction(TToken token) => IsWord(token) && !IsOperator(token);
+
+        protected abstract TToken RenameFunctionToHaveArgsCount(TToken oldFunctionToken, int argsCount);
     }
 }

@@ -22,8 +22,10 @@ namespace UsefullAlgorightms.Parsing.ExpressionParsing
 
         protected override bool IsSkippable(string token) => token == " ";
 
-        internal override bool IsComma(string token) => token == ",";
+        protected override bool IsComma(string token) => token == ",";
 
-        internal override bool IsWord(string token) => Regex.IsMatch(token, "[a-zA-Z]+");
+        protected override bool IsWord(string token) => Regex.IsMatch(token, "[a-zA-Z]+");
+
+        protected override string RenameFunctionToHaveArgsCount(string oldFunctionToken, int argsCount) => string.Format("{0}_{1}", oldFunctionToken, argsCount);
     }
 }
