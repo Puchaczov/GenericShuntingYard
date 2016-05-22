@@ -28,8 +28,10 @@ namespace UsefullAlgorightms.Parsing.ExpressionParsing
 
         protected override string RenameFunctionToHaveArgsCount(string oldFunctionToken, int argsCount) => string.Format("{0}_{1}", oldFunctionToken, argsCount);
 
-        protected override string GenerateVirtualToken() => "virtual";
+        protected override string GenerateArgsToken() => "virtual";
 
         protected override bool IsVirtualFunction(string token) => token == "virtual";
+
+        protected override string RenameArgsCount(string oldArgsToken, int argsCount) => string.Format("{0}_{1}", oldArgsToken, argsCount);
     }
 }

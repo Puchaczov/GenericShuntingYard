@@ -17,7 +17,6 @@ namespace UsefullAlgorithms.Tests
             Assert.AreEqual("1", vals[0]);
             Assert.AreEqual("2", vals[1]);
             Assert.AreEqual("+", vals[2]);
-            Assert.AreEqual("+", vals[2]);
             Assert.AreEqual("3", vals[3]);
             Assert.AreEqual("4", vals[4]);
             Assert.AreEqual("/", vals[5]);

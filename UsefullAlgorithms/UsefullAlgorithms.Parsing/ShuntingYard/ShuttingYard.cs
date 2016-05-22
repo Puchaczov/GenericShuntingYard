@@ -28,7 +28,7 @@ namespace UsefullAlgorithms.Parsing.ExpressionParsing
         where TToken : IEquatable<TToken>
     {
 
-        private class FunctionArgs
+        private class Args
         {
             public int ArgsCount { get; set; }
             public TToken Name { get; set; }
@@ -64,12 +64,10 @@ namespace UsefullAlgorithms.Parsing.ExpressionParsing
         {
             List<TToken> output = new List<TToken>();
             Stack<TToken> stack = new Stack<TToken>();
-            Stack<FunctionArgs> argsOccurence = new Stack<FunctionArgs>();
+            Stack<Args> argsOccurence = new Stack<Args>();
 
             Stack<bool> commaOccured = new Stack<bool>();
-            bool isInsideFunction = false;
-
-            bool hasArg = false;
+            Stack<bool> hasArguments = new Stack<bool>();
 
             TToken lastToken = default(TToken);
 
@@ -95,20 +93,15 @@ namespace UsefullAlgorithms.Parsing.ExpressionParsing
                 }
                 else if (IsLeftParenthesis(token))
                 {
-                    stack.Push(token);
+                    hasArguments.Push(false);
+                    var isFunction = !stack.IsEmpty() && this.IsFunction(stack.Peek());
+                    if (isFunction)
+                        argsOccurence.Push(new Args { Name = stack.Peek(), ArgsCount = 0 });
+                    else
+                        argsOccurence.Push(new Args { Name = GenerateArgsToken(), ArgsCount = 0 });
 
-                    //when occured something like (1 + 2), there will be generated virtual anonymous function call
-                    //becouse there must be support for (1,2,3,4) syntax with varying args count. After all it's supposed to be virtual(1,2,3,4)
-                    if(object.Equals(lastToken, default(TToken)) || !IsFunction(lastToken))
-                    {
-                        TToken generated = GenerateVirtualToken();
-                        var p = stack.Pop();
-                        stack.Push(generated);
-                        stack.Push(p);
-                        isInsideFunction = true;
-                        commaOccured.Push(false);
-                        argsOccurence.Push(new FunctionArgs { Name = generated, ArgsCount = 0 });
-                    }
+                    stack.Push(token);
+                    commaOccured.Push(false);
                 }
                 else if (IsRightParenthesis(token))
                 {
@@ -118,37 +111,33 @@ namespace UsefullAlgorithms.Parsing.ExpressionParsing
                     }
                     stack.Pop();
 
-                    if(!stack.IsEmpty() && IsFunction(stack.Peek()) && !IsVirtualFunction(stack.Peek()))
+                    var hasArgs = hasArguments.Pop();
+                    if(!stack.IsEmpty() && IsFunction(stack.Peek())) //function call ie. fun(1,2,3);
                     {
                         stack.Pop();
                         var fun = argsOccurence.Pop();
-                        output.Add(RenameFunctionToHaveArgsCount(fun.Name, fun.ArgsCount + (commaOccured.Pop() || hasArg ? 1 : 0)));
-                        isInsideFunction = hasArg = false;
+                        output.Add(RenameFunctionToHaveArgsCount(fun.Name, fun.ArgsCount + (commaOccured.Pop() || hasArgs ? 1 : 0)));
                     }
-                    else if(!stack.IsEmpty() && IsFunction(stack.Peek()) && IsVirtualFunction(stack.Peek()) && commaOccured.Peek())
-                    { //funkcja wirtualna posiadajaca argument np. (1,2,3)
-                        stack.Pop();
-                        var fun = argsOccurence.Pop();
-                        commaOccured.Pop();
-                        output.Add(RenameFunctionToHaveArgsCount(fun.Name, fun.ArgsCount + 1));
-                        isInsideFunction = hasArg = false;
-                    }
-                    else if(!stack.IsEmpty() && IsFunction(stack.Peek()))
+                    else if(!stack.IsEmpty() && !IsFunction(stack.Peek())) // not a function ie. in (1,2,3)
                     {
-                        stack.Pop(); //remove virtual function from stack.
-                        argsOccurence.Pop();
-                        commaOccured.Pop();
-                        isInsideFunction = hasArg = false;
+                        var fun = argsOccurence.Pop();
+                        if (commaOccured.Peek()) //only when "," occured in (...)
+                            output.Add(RenameArgsCount(fun.Name, fun.ArgsCount + (commaOccured.Pop() || hasArgs ? 1 : 0)));
+                        else
+                            commaOccured.Pop();
+                    }
+                    else if(stack.IsEmpty() && hasArgs)
+                    {
+                        var fun = argsOccurence.Pop();
+                        if (commaOccured.Peek())
+                            output.Add(RenameArgsCount(fun.Name, fun.ArgsCount + (commaOccured.Pop() || hasArgs ? 1 : 0)));
+                        else
+                            commaOccured.Pop();
                     }
                 }
                 else if (IsFunction(token))
                 {
                     stack.Push(token);
-
-                    commaOccured.Push(false);
-                    hasArg = false;
-                    isInsideFunction = true;
-                    argsOccurence.Push(new FunctionArgs{ Name = token, ArgsCount = 0 });
                 }
                 else if(IsComma(token))
                 {
@@ -164,10 +153,8 @@ namespace UsefullAlgorithms.Parsing.ExpressionParsing
                 }
                 else
                 {
-                    if(isInsideFunction && !hasArg)
-                    {
-                        hasArg = true;
-                    }
+                    if (!hasArguments.IsEmpty() && !hasArguments.Peek())
+                        hasArguments.Swap(true);
                     output.Add(token);
                 }
                 lastToken = token;
@@ -182,7 +169,7 @@ namespace UsefullAlgorithms.Parsing.ExpressionParsing
 
         protected abstract bool IsVirtualFunction(TToken token);
 
-        protected abstract TToken GenerateVirtualToken();
+        protected abstract TToken GenerateArgsToken();
 
         protected abstract bool IsComma(TToken token);
         protected abstract bool IsWord(TToken token);
@@ -206,5 +193,6 @@ namespace UsefullAlgorithms.Parsing.ExpressionParsing
         private bool IsFunction(TToken token) => IsWord(token) && !IsOperator(token);
 
         protected abstract TToken RenameFunctionToHaveArgsCount(TToken oldFunctionToken, int argsCount);
+        protected abstract TToken RenameArgsCount(TToken oldArgsToken, int argsCount);
     }
 }
