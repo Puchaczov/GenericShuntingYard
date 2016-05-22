@@ -17,6 +17,7 @@ namespace UsefullAlgorithms.Tests
             Assert.AreEqual("1", vals[0]);
             Assert.AreEqual("2", vals[1]);
             Assert.AreEqual("+", vals[2]);
+            Assert.AreEqual("+", vals[2]);
             Assert.AreEqual("3", vals[3]);
             Assert.AreEqual("4", vals[4]);
             Assert.AreEqual("/", vals[5]);
@@ -77,6 +78,16 @@ namespace UsefullAlgorithms.Tests
             BooleanExpressionInfixToPostfix converter = new BooleanExpressionInfixToPostfix();
 
             var tokens = converter.Parse("p ( 2 and 4 , ( 1 or 3 ) and 5 )");
+
+            Assert.AreEqual("2", tokens[0]);
+            Assert.AreEqual("4", tokens[1]);
+            Assert.AreEqual("and", tokens[2]);
+            Assert.AreEqual("1", tokens[3]);
+            Assert.AreEqual("3", tokens[4]);
+            Assert.AreEqual("or", tokens[5]);
+            Assert.AreEqual("5", tokens[6]);
+            Assert.AreEqual("and", tokens[7]);
+            Assert.AreEqual("p_2", tokens[8]);
         }
 
         [TestMethod]
@@ -85,6 +96,31 @@ namespace UsefullAlgorithms.Tests
             BooleanExpressionInfixToPostfix converter = new BooleanExpressionInfixToPostfix();
 
             var tokens = converter.Parse("p ( 2 and 4 , r ( 1 ) , t ( 3 , 2 ) )");
+
+            Assert.AreEqual("2", tokens[0]);
+            Assert.AreEqual("4", tokens[1]);
+            Assert.AreEqual("and", tokens[2]);
+            Assert.AreEqual("1", tokens[3]);
+            Assert.AreEqual("r_1", tokens[4]);
+            Assert.AreEqual("3", tokens[5]);
+            Assert.AreEqual("2", tokens[6]);
+            Assert.AreEqual("t_2", tokens[7]);
+            Assert.AreEqual("p_3", tokens[8]);
+        }
+
+        [TestMethod]
+        public void TestAnonymousCommaBlock_ShouldPass()
+        {
+            BooleanExpressionInfixToPostfix converter = new BooleanExpressionInfixToPostfix();
+
+            var tokens = converter.Parse("( 1 , 2 , ( 3 and 4 ) )");
+
+            Assert.AreEqual("1", tokens[0]);
+            Assert.AreEqual("2", tokens[1]);
+            Assert.AreEqual("3", tokens[2]);
+            Assert.AreEqual("4", tokens[3]);
+            Assert.AreEqual("and", tokens[4]);
+            Assert.AreEqual("virtual_3", tokens[5]);
         }
     }
 }
