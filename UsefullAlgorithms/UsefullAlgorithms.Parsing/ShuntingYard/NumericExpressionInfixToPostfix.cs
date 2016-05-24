@@ -27,12 +27,6 @@ namespace UsefullAlgorithms.Parsing.ExpressionParsing
 
         protected override bool IsWord(string token) => Regex.IsMatch(token, "[a-zA-Z]+");
 
-        protected override string RenameFunctionToHaveArgsCount(string oldFunctionToken, int argsCount) => string.Format("{0}_{1}", oldFunctionToken, argsCount);
-
-        protected override string GenerateArgsToken() => "virtual";
-
-        protected override string RenameArgsCount(string oldArgsToken, int argsCount) => string.Format("{0}_{1}", oldArgsToken, argsCount);
-
         protected override string GenerateVarArgToken(int argsCount) => string.Format("vararg_{0}", argsCount);
     }
 }

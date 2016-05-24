@@ -31,7 +31,6 @@ namespace UsefullAlgorithms.Parsing.ExpressionParsing
         private class Args
         {
             public int ArgsCount { get; set; }
-            public TToken Name { get; set; }
         }
 
         protected readonly Dictionary<TToken, PrecedenceAssociativity> operators;
@@ -96,9 +95,9 @@ namespace UsefullAlgorithms.Parsing.ExpressionParsing
                     hasArguments.Push(false);
                     var isFunction = !stack.IsEmpty() && this.IsFunction(stack.Peek());
                     if (isFunction)
-                        argsOccurence.Push(new Args { Name = stack.Peek(), ArgsCount = 0 });
+                        argsOccurence.Push(new Args { ArgsCount = 0 });
                     else
-                        argsOccurence.Push(new Args { Name = GenerateArgsToken(), ArgsCount = 0 });
+                        argsOccurence.Push(new Args { ArgsCount = 0 });
 
                     stack.Push(token);
                     commaOccured.Push(false);
@@ -169,17 +168,16 @@ namespace UsefullAlgorithms.Parsing.ExpressionParsing
             return output.ToArray();
         }
 
-        protected abstract TToken GenerateArgsToken();
-
         protected abstract bool IsComma(TToken token);
         protected abstract bool IsWord(TToken token);
         protected abstract bool IsSkippable(TToken token);
-
         protected abstract bool IsRightParenthesis(TToken token);
         protected abstract bool IsLeftParenthesis(TToken token);
 
         protected bool IsAssociative(TToken token, Associativity associativity) => IsOperator(token) && operators[token].Associativity == associativity;
         protected virtual bool IsOperator(TToken token) => operators.ContainsKey(token);
+
+        private bool IsFunction(TToken token) => IsWord(token) && !IsOperator(token);
 
         protected int TestPrecedence(TToken token1, TToken token2)
         {
@@ -190,10 +188,6 @@ namespace UsefullAlgorithms.Parsing.ExpressionParsing
             throw new ArgumentException("One of arguments isn't operator");
         }
 
-        private bool IsFunction(TToken token) => IsWord(token) && !IsOperator(token);
-
-        protected abstract TToken RenameFunctionToHaveArgsCount(TToken oldFunctionToken, int argsCount);
-        protected abstract TToken RenameArgsCount(TToken oldArgsToken, int argsCount);
         protected abstract TToken GenerateVarArgToken(int argsCount);
     }
 }
