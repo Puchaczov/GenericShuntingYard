@@ -31,8 +31,8 @@ namespace UsefullAlgorithms.Parsing.ExpressionParsing
 
         protected override string GenerateArgsToken() => "virtual";
 
-        protected override bool IsVirtualFunction(string token) => token == "virtual";
-
         protected override string RenameArgsCount(string oldArgsToken, int argsCount) => string.Format("{0}_{1}", oldArgsToken, argsCount);
+
+        protected override string GenerateVarArgToken(int argsCount) => string.Format("vararg_{0}", argsCount);
     }
 }

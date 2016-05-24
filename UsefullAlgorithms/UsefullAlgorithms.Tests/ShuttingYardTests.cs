@@ -58,8 +58,9 @@ namespace UsefullAlgorithms.Tests
             var tokens = converter.Parse("1 and test ( )");
 
             Assert.AreEqual("1", tokens[0]);
-            Assert.AreEqual("test_0", tokens[1]);
-            Assert.AreEqual("and", tokens[2]);
+            Assert.AreEqual("vararg_0", tokens[1]);
+            Assert.AreEqual("test", tokens[2]);
+            Assert.AreEqual("and", tokens[3]);
 
             tokens = converter.Parse("1 and test ( 1 , 2 , 3 )");
 
@@ -67,8 +68,9 @@ namespace UsefullAlgorithms.Tests
             Assert.AreEqual("1", tokens[1]);
             Assert.AreEqual("2", tokens[2]);
             Assert.AreEqual("3", tokens[3]);
-            Assert.AreEqual("test_3", tokens[4]);
-            Assert.AreEqual("and", tokens[5]);
+            Assert.AreEqual("vararg_3", tokens[4]);
+            Assert.AreEqual("test", tokens[5]);
+            Assert.AreEqual("and", tokens[6]);
         }
 
         [TestMethod]
@@ -86,7 +88,8 @@ namespace UsefullAlgorithms.Tests
             Assert.AreEqual("or", tokens[5]);
             Assert.AreEqual("5", tokens[6]);
             Assert.AreEqual("and", tokens[7]);
-            Assert.AreEqual("p_2", tokens[8]);
+            Assert.AreEqual("vararg_2", tokens[8]);
+            Assert.AreEqual("p", tokens[9]);
         }
 
         [TestMethod]
@@ -100,11 +103,14 @@ namespace UsefullAlgorithms.Tests
             Assert.AreEqual("4", tokens[1]);
             Assert.AreEqual("and", tokens[2]);
             Assert.AreEqual("1", tokens[3]);
-            Assert.AreEqual("r_1", tokens[4]);
-            Assert.AreEqual("3", tokens[5]);
-            Assert.AreEqual("2", tokens[6]);
-            Assert.AreEqual("t_2", tokens[7]);
-            Assert.AreEqual("p_3", tokens[8]);
+            Assert.AreEqual("vararg_1", tokens[4]);
+            Assert.AreEqual("r", tokens[5]);
+            Assert.AreEqual("3", tokens[6]);
+            Assert.AreEqual("2", tokens[7]);
+            Assert.AreEqual("vararg_2", tokens[8]);
+            Assert.AreEqual("t", tokens[9]);
+            Assert.AreEqual("vararg_3", tokens[10]);
+            Assert.AreEqual("p", tokens[11]);
         }
 
         [TestMethod]
@@ -119,7 +125,7 @@ namespace UsefullAlgorithms.Tests
             Assert.AreEqual("3", tokens[2]);
             Assert.AreEqual("4", tokens[3]);
             Assert.AreEqual("and", tokens[4]);
-            Assert.AreEqual("virtual_3", tokens[5]);
+            Assert.AreEqual("vararg_3", tokens[5]);
         }
     }
 }

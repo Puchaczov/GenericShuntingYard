@@ -114,15 +114,16 @@ namespace UsefullAlgorithms.Parsing.ExpressionParsing
                     var hasArgs = hasArguments.Pop();
                     if(!stack.IsEmpty() && IsFunction(stack.Peek())) //function call ie. fun(1,2,3);
                     {
-                        stack.Pop();
                         var fun = argsOccurence.Pop();
-                        output.Add(RenameFunctionToHaveArgsCount(fun.Name, fun.ArgsCount + (commaOccured.Pop() || hasArgs ? 1 : 0)));
+                        //generate vararg token to instruct evaluator how many arguments should be poped from stack
+                        output.Add(GenerateVarArgToken(fun.ArgsCount + (commaOccured.Pop() || hasArgs ? 1 : 0)));
+                        output.Add(stack.Pop());
                     }
                     else if(!stack.IsEmpty() && !IsFunction(stack.Peek())) // not a function ie. in (1,2,3)
                     {
                         var fun = argsOccurence.Pop();
                         if (commaOccured.Peek()) //only when "," occured in (...)
-                            output.Add(RenameArgsCount(fun.Name, fun.ArgsCount + (commaOccured.Pop() || hasArgs ? 1 : 0)));
+                            output.Add(GenerateVarArgToken(fun.ArgsCount + (commaOccured.Pop() || hasArgs ? 1 : 0)));
                         else
                             commaOccured.Pop();
                     }
@@ -130,7 +131,8 @@ namespace UsefullAlgorithms.Parsing.ExpressionParsing
                     {
                         var fun = argsOccurence.Pop();
                         if (commaOccured.Peek())
-                            output.Add(RenameArgsCount(fun.Name, fun.ArgsCount + (commaOccured.Pop() || hasArgs ? 1 : 0)));
+                            //generate vararg that that isn't associated to any function. It's pure (1,2,3,...,n)
+                            output.Add(GenerateVarArgToken(fun.ArgsCount + (commaOccured.Pop() || hasArgs ? 1 : 0)));
                         else
                             commaOccured.Pop();
                     }
@@ -167,8 +169,6 @@ namespace UsefullAlgorithms.Parsing.ExpressionParsing
             return output.ToArray();
         }
 
-        protected abstract bool IsVirtualFunction(TToken token);
-
         protected abstract TToken GenerateArgsToken();
 
         protected abstract bool IsComma(TToken token);
@@ -194,5 +194,6 @@ namespace UsefullAlgorithms.Parsing.ExpressionParsing
 
         protected abstract TToken RenameFunctionToHaveArgsCount(TToken oldFunctionToken, int argsCount);
         protected abstract TToken RenameArgsCount(TToken oldArgsToken, int argsCount);
+        protected abstract TToken GenerateVarArgToken(int argsCount);
     }
 }
