@@ -1,17 +1,15 @@
 ﻿using System.Resources;
 using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("UsefullAlgorithms.Parsing")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Set of usefull algorithms for parsing")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Jakub Puchała")]
 [assembly: AssemblyProduct("UsefullAlgorithms.Parsing")]
-[assembly: AssemblyCopyright("Copyright ©  2016")]
+[assembly: AssemblyCopyright("Jakub Puchała ©  2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: NeutralResourcesLanguage("en")]
