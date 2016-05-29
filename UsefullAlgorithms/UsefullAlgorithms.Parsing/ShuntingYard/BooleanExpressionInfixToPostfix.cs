@@ -27,5 +27,9 @@ namespace UsefullAlgorightms.Parsing.ExpressionParsing
         protected override bool IsWord(string token) => Regex.IsMatch(token, "[a-zA-Z]+");
 
         protected override string GenerateVarArgToken(int argsCount) => string.Format("vararg_{0}", argsCount);
+
+        protected override string GenerateFunctionToken(string oldToken) => oldToken;
+
+        protected override bool IsValue(string token) => Regex.IsMatch("[01]+", token);
     }
 }

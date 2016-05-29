@@ -1,22 +1,10 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using UsefullAlgorithms.Helpers;
 
 namespace UsefullAlgorithms.Parsing.ExpressionParsing
 {
-    public static class StackHelper
-    {
-        public static bool IsEmpty<T>(this Stack<T> stack) => stack.Count == 0;
-
-        public static T Swap<T>(this Stack<T> stack, T arg)
-        {
-            var poped = stack.Pop();
-            stack.Push(arg);
-            return poped;
-        }
-    }
-
-
     /// <summary>
     /// Implementation based on https://en.wikipedia.org/wiki/Shunting-yard_algorithm
     /// Idea how to handle function call based on this whole topic: http://stackoverflow.com/questions/29348246/how-to-count-number-of-arguments-of-a-method-while-converting-infix-expression-t
@@ -116,7 +104,7 @@ namespace UsefullAlgorithms.Parsing.ExpressionParsing
                         var fun = argsOccurence.Pop();
                         //generate vararg token to instruct evaluator how many arguments should be poped from stack
                         output.Add(GenerateVarArgToken(fun.ArgsCount + (commaOccured.Pop() || hasArgs ? 1 : 0)));
-                        output.Add(stack.Pop());
+                        output.Add(GenerateFunctionToken(stack.Pop()));
                     }
                     else if(!stack.IsEmpty() && !IsFunction(stack.Peek())) // not a function ie. in (1,2,3)
                     {
@@ -173,11 +161,12 @@ namespace UsefullAlgorithms.Parsing.ExpressionParsing
         protected abstract bool IsSkippable(TToken token);
         protected abstract bool IsRightParenthesis(TToken token);
         protected abstract bool IsLeftParenthesis(TToken token);
+        protected abstract bool IsValue(TToken token);
 
         protected bool IsAssociative(TToken token, Associativity associativity) => IsOperator(token) && operators[token].Associativity == associativity;
         protected virtual bool IsOperator(TToken token) => operators.ContainsKey(token);
 
-        private bool IsFunction(TToken token) => IsWord(token) && !IsOperator(token);
+        private bool IsFunction(TToken token) => IsWord(token) && !IsOperator(token) && !IsValue(token);
 
         protected int TestPrecedence(TToken token1, TToken token2)
         {
@@ -189,5 +178,6 @@ namespace UsefullAlgorithms.Parsing.ExpressionParsing
         }
 
         protected abstract TToken GenerateVarArgToken(int argsCount);
+        protected abstract TToken GenerateFunctionToken(TToken oldToken);
     }
 }

@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UsefullAlgorithms.Tests", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UsefullAlgorithms.Parsing", "UsefullAlgorithms.Parsing\UsefullAlgorithms.Parsing.csproj", "{70305E94-B203-4CCA-B5DD-7052128BB71B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UsefullAlgorithms.Helpers", "UsefullAlgorithms.Helpers\UsefullAlgorithms.Helpers.csproj", "{43B8EB6D-8B1A-456B-B2FE-22267BA7AC71}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{70305E94-B203-4CCA-B5DD-7052128BB71B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{70305E94-B203-4CCA-B5DD-7052128BB71B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{70305E94-B203-4CCA-B5DD-7052128BB71B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{43B8EB6D-8B1A-456B-B2FE-22267BA7AC71}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{43B8EB6D-8B1A-456B-B2FE-22267BA7AC71}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{43B8EB6D-8B1A-456B-B2FE-22267BA7AC71}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{43B8EB6D-8B1A-456B-B2FE-22267BA7AC71}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

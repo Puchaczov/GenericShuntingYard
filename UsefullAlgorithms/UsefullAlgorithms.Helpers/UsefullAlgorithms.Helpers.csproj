@@ -5,11 +5,11 @@
     <MinimumVisualStudioVersion>11.0</MinimumVisualStudioVersion>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{70305E94-B203-4CCA-B5DD-7052128BB71B}</ProjectGuid>
+    <ProjectGuid>{43B8EB6D-8B1A-456B-B2FE-22267BA7AC71}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>UsefullAlgorithms.Parsing</RootNamespace>
-    <AssemblyName>UsefullAlgorithms.Parsing</AssemblyName>
+    <RootNamespace>UsefullAlgorithms.Helpers</RootNamespace>
+    <AssemblyName>UsefullAlgorithms.Helpers</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -35,17 +35,10 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .NET Framework is automatically included -->
-    <ProjectReference Include="..\UsefullAlgorithms.Helpers\UsefullAlgorithms.Helpers.csproj">
-      <Project>{43b8eb6d-8b1a-456b-b2fe-22267ba7ac71}</Project>
-      <Name>UsefullAlgorithms.Helpers</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="StackHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ShuntingYard\BooleanExpressionInfixToPostfix.cs" />
-    <Compile Include="ShuntingYard\NumericExpressionInfixToPostfix.cs" />
-    <Compile Include="ShuntingYard\PrecedenceAssociativity.cs" />
-    <Compile Include="ShuntingYard\ShuttingYard.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
