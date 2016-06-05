@@ -127,5 +127,37 @@ namespace UsefullAlgorithms.Tests
             Assert.AreEqual("and", tokens[4]);
             Assert.AreEqual("vararg_3", tokens[5]);
         }
+
+        [TestMethod]
+        public void TestFunctionCallAsArgument_ShouldPass()
+        {
+            BooleanExpressionInfixToPostfix converter = new BooleanExpressionInfixToPostfix();
+
+            var tokens = converter.Parse("f ( p ( ) )");
+
+            Assert.AreEqual("vararg_0", tokens[0]);
+            Assert.AreEqual("p", tokens[1]);
+            Assert.AreEqual("vararg_1", tokens[2]);
+            Assert.AreEqual("f", tokens[3]);
+            
+            tokens = converter.Parse("f ( p ( 3 ) )");
+
+            Assert.AreEqual("3", tokens[0]);
+            Assert.AreEqual("vararg_1", tokens[1]);
+            Assert.AreEqual("p", tokens[2]);
+            Assert.AreEqual("vararg_1", tokens[3]);
+            Assert.AreEqual("f", tokens[4]);
+
+            tokens = converter.Parse("f ( p ( 3 ) and 5 , 1 )");
+            
+            Assert.AreEqual("3", tokens[0]);
+            Assert.AreEqual("vararg_1", tokens[1]);
+            Assert.AreEqual("p", tokens[2]);
+            Assert.AreEqual("5", tokens[3]);
+            Assert.AreEqual("and", tokens[4]);
+            Assert.AreEqual("1", tokens[5]);
+            Assert.AreEqual("vararg_2", tokens[6]);
+            Assert.AreEqual("f", tokens[7]);
+        }
     }
 }

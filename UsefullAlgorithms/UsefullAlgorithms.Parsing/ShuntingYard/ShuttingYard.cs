@@ -80,12 +80,16 @@ namespace UsefullAlgorithms.Parsing.ExpressionParsing
                 }
                 else if (IsLeftParenthesis(token))
                 {
-                    hasArguments.Push(false);
                     var isFunction = !stack.IsEmpty() && this.IsFunction(stack.Peek());
                     if (isFunction)
                         argsOccurence.Push(new Args { ArgsCount = 0 });
                     else
                         argsOccurence.Push(new Args { ArgsCount = 0 });
+
+                    //if any left parenthesis occur inside function, I will assume that there is at least one argument
+                    if (!hasArguments.IsEmpty())
+                        hasArguments.Swap(true);    
+                    hasArguments.Push(false);
 
                     stack.Push(token);
                     commaOccured.Push(false);
