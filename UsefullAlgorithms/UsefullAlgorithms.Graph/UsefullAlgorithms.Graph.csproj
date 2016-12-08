@@ -5,15 +5,15 @@
     <MinimumVisualStudioVersion>11.0</MinimumVisualStudioVersion>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{43B8EB6D-8B1A-456B-B2FE-22267BA7AC71}</ProjectGuid>
+    <ProjectGuid>{9593F04C-E0FB-4F6B-A7AF-A9F4452163C0}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>UsefullAlgorithms.Helpers</RootNamespace>
-    <AssemblyName>UsefullAlgorithms.Helpers</AssemblyName>
+    <RootNamespace>UsefullAlgorithms.Graph</RootNamespace>
+    <AssemblyName>UsefullAlgorithms.Graph</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <TargetFrameworkProfile>Profile259</TargetFrameworkProfile>
+    <TargetFrameworkProfile>Profile75</TargetFrameworkProfile>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -37,9 +37,15 @@
     <!-- A reference to the entire .NET Framework is automatically included -->
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="StackHelper.cs" />
+    <Compile Include="DefaultTraverseAlgorithFactory.cs" />
+    <Compile Include="Algorithms\DepthFirstSearch.cs" />
+    <Compile Include="Algorithms\BreadthFirstSearch.cs" />
+    <Compile Include="Edge.cs" />
+    <Compile Include="Graph.cs" />
+    <Compile Include="ITraverseAlgorithmFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="StringHelper.cs" />
+    <Compile Include="Vertex.cs" />
+    <Compile Include="VertexEqualityComparer.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
