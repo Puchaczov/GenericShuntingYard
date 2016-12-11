@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace UsefullAlgorithms.Graph
 {
@@ -59,10 +56,21 @@ namespace UsefullAlgorithms.Graph
 
         public TEdge GetEdge(T first, T second)
         {
+            if (!hashCodeLookup.ContainsKey(first))
+                return default(TEdge);
+
+            if (!hashCodeLookup.ContainsKey(second))
+                return default(TEdge);
+
+            return GetEdge(GetByValue(first), GetByValue(second));
+        }
+
+        public TEdge GetEdge(Vertex<T> first, Vertex<T> second)
+        {
             if (!HasVertex(first))
                 return null;
 
-            return edges[GetByValue(first)].SingleOrDefault(f => f.Destination.Data.Equals(second));
+            return edges[first].SingleOrDefault(f => f.Destination.Data.Equals(second.Data));
         }
 
         public void Add(Vertex<T> vertex)
@@ -86,6 +94,12 @@ namespace UsefullAlgorithms.Graph
             Add(v);
 
             return v;
+        }
+
+        public void Add(params T[] items)
+        {
+            foreach (var item in items)
+                Add(item);
         }
 
         public void Remove(T data)
@@ -163,6 +177,39 @@ namespace UsefullAlgorithms.Graph
         public bool HasEdge(Vertex<T> source, Vertex<T> destination) => edges[source].Any(f => f.Destination.Data.Equals(destination.Data));
 
         public Vertex<T> GetByValue(T value) => hashCodeLookup[value];
+
+        public bool HasCycle(Vertex<T> point)
+        {
+            if (!HasVertex(point))
+                return false;
+
+            Stack<Vertex<T>> s = new Stack<Vertex<T>>();
+            SortedSet<Vertex<T>> visited = new SortedSet<Vertex<T>>();
+
+            s.Push(point);
+            while(s.Count > 0)
+            {
+                var node = s.Pop();
+
+                foreach (var desc in this.GetAdjacents(node))
+                {
+                    if (node.Data.Equals(desc.Data))
+                        return true;
+
+                    if (visited.Any(f => f.Data.Equals(desc.Data)))
+                        return true;
+
+                    if (s.Any(f => f.Data.Equals(desc.Data)))
+                        return true;
+
+                    s.Push(desc);
+                }
+
+                visited.Add(node);
+            }
+
+            return false;
+        }
 
         public IEnumerator<Vertex<T>> GetEnumerator(Func<Graph<T, TEdge>, IEnumerator<Vertex<T>>> f) => f(this);
 
