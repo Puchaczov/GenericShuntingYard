@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace UsefullAlgorithms.Graph
 {
+    [DebuggerDisplay("{Source.Data.ToString()} => {Destination.Data.ToString()} [{Direction}]")]
     public class Edge<T> where T: IEquatable<T>
     {
         public enum Relation

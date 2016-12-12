@@ -101,7 +101,8 @@ namespace UsefullAlgorithms.Graph.Tests
         [TestMethod]
         public void Graphs_CheckAddition()
         {
-            Graph<string, Edge<string>> g = new Graph<string, Edge<string>>();
+            Graph<string, Edge<string>> g = new Graph<string, Edge<string>>(
+                new DefaultTraverseAlgorithFactory<string, Edge<string>>(DefaultTraverseAlgorithFactory<string, Edge<string>>.Algorithm.BreadthFirstSearch), "A");
 
             g.Add("F");
 
@@ -130,7 +131,8 @@ namespace UsefullAlgorithms.Graph.Tests
         [TestMethod]
         public void Graphs_HasCycles()
         {
-            g = new Graph<string, Edge<string>>();
+            g = new Graph<string, Edge<string>>(
+                new DefaultTraverseAlgorithFactory<string, Edge<string>>(DefaultTraverseAlgorithFactory<string, Edge<string>>.Algorithm.BreadthFirstSearch), "A");
 
             g.Add("A", "B", "C");
 
@@ -141,9 +143,43 @@ namespace UsefullAlgorithms.Graph.Tests
             Assert.AreEqual(true, g.HasCycle(g.GetByValue("A")));
         }
 
+        [TestMethod]
+        public void Graphs_TestDepthFirstSearchTraverse()
+        {
+            g.TraverseAlgorithm = new DefaultTraverseAlgorithFactory<string, Edge<string>>(DefaultTraverseAlgorithFactory<string, Edge<string>>.Algorithm.DepthFirstSearch);
+            g.Remove(g.GetEdge("B", "C"));
+
+            string tOrder = string.Empty;
+
+
+            foreach(var node in g)
+            {
+                tOrder += node.Data;
+            }
+
+            Assert.AreEqual("ABDC", tOrder);
+        }
+
+        [TestMethod]
+        public void Graphs_TestBreadthFirstSearchTraverse()
+        {
+            g.TraverseAlgorithm = new DefaultTraverseAlgorithFactory<string, Edge<string>>(DefaultTraverseAlgorithFactory<string, Edge<string>>.Algorithm.BreadthFirstSearch);
+            g.Remove(g.GetEdge("B", "C"));
+
+            string tOrder = string.Empty;
+
+            foreach(var node in g)
+            {
+                tOrder += node.Data;
+            }
+
+            Assert.AreEqual("ABCD", tOrder);
+        }
+
         private static Graph<string, Edge<string>> GetGraph()
         {
-            Graph<string, Edge<string>> g = new Graph<string, Edge<string>>();
+            Graph<string, Edge<string>> g = new Graph<string, Edge<string>>(
+                new DefaultTraverseAlgorithFactory<string, Edge<string>>(DefaultTraverseAlgorithFactory<string, Edge<string>>.Algorithm.BreadthFirstSearch), "A");
 
             g.Add("A");
             g.Add("B");

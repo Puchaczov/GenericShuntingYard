@@ -1,20 +1,49 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace UsefullAlgorithms.Graph
 {
-    public class Graph<T, TEdge> where T : IEquatable<T> where TEdge : Edge<T>
+    public class Graph<T, TEdge> : IEnumerable<Vertex<T>> where T : IEquatable<T> where TEdge : Edge<T>
     {
         private Dictionary<T, Vertex<T>> hashCodeLookup;
         private Dictionary<Vertex<T>, LinkedList<Vertex<T>>> verticles;
         private Dictionary<Vertex<T>, LinkedList<TEdge>> edges;
+        private ITraverseAlgorithmFactory<T, TEdge, Vertex<T>> traverseAlgorithm;
+        private T startPoint;
 
-        public Graph()
+        public Graph(ITraverseAlgorithmFactory<T, TEdge, Vertex<T>> traverseAlgorithm, T startPoint)
         {
             verticles = new Dictionary<Vertex<T>, LinkedList<Vertex<T>>>(new VertexEqualityComparer<T>());
             edges = new Dictionary<Vertex<T>, LinkedList<TEdge>>(new VertexEqualityComparer<T>());
             hashCodeLookup = new Dictionary<T, Vertex<T>>();
+            this.traverseAlgorithm = traverseAlgorithm;
+            this.startPoint = startPoint;
+        }
+
+        public T StartPoint
+        {
+            get
+            {
+                return startPoint;
+            }
+            set
+            {
+                startPoint = value;
+            }
+        }
+
+        public ITraverseAlgorithmFactory<T, TEdge, Vertex<T>> TraverseAlgorithm
+        {
+            get
+            {
+                return traverseAlgorithm;
+            }
+            set
+            {
+                traverseAlgorithm = value;
+            }
         }
 
         public int VerticlesCount => verticles.Count;
@@ -214,5 +243,9 @@ namespace UsefullAlgorithms.Graph
         public IEnumerator<Vertex<T>> GetEnumerator(Func<Graph<T, TEdge>, IEnumerator<Vertex<T>>> f) => f(this);
 
         public IEnumerator<Vertex<T>> TraverseBy(T startFrom, Func<Graph<T, TEdge>, T, IEnumerator<Vertex<T>>> f) => f(this, startFrom);
+
+        public IEnumerator<Vertex<T>> GetEnumerator() => traverseAlgorithm.Create(this, startPoint);
+
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
 }

@@ -40,6 +40,7 @@ namespace UsefullAlgorithms.Graph
             {
                 var vert = stack.Pop();
 
+                var tmpStack = new Stack<Vertex<T>>();
                 foreach(var desc in graph.GetAdjacents(vert))
                 {
                     if (vert.Data.Equals(desc.Data))
@@ -51,7 +52,12 @@ namespace UsefullAlgorithms.Graph
                     if (stack.Any(f => f.Data.Equals(desc.Data)))
                         continue;
 
-                    stack.Push(desc);
+                    tmpStack.Push(desc);
+                }
+
+                while(tmpStack.Count > 0)
+                {
+                    stack.Push(tmpStack.Pop());
                 }
 
                 visited.Add(vert);

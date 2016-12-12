@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace UsefullAlgorithms.Graph
 {
+    [DebuggerDisplay("{Data.ToString()}")]
     public class Vertex<T> : IComparable<Vertex<T>>, IComparable where T : IEquatable<T>
     {
         public T Data { get; }
