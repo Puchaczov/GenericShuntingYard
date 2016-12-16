@@ -191,6 +191,9 @@ namespace UsefullAlgorithms.Graph
 
             if (first != null && second != null)
             {
+                if (GetEdge(first, second) != null)
+                    return;
+
                 Connect(first, second, edge);
             }
         }
