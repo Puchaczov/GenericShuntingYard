@@ -11,7 +11,7 @@ namespace UsefullAlgorithms.Graph
         private readonly int weight;
 
         public WeightedEdge(int weight, Vertex<T> source, Vertex<T> destination, Relation direction)
-            : base(source, destination, direction)
+            : base(source, destination)
         {
             this.weight = weight;
         }

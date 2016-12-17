@@ -19,13 +19,11 @@ namespace UsefullAlgorithms.Graph
 
         public Vertex<T> Source { get; }
         public Vertex<T> Destination { get; }
-        public Relation Direction { get; }
 
-        public Edge(Vertex<T> source, Vertex<T> destination, Relation direction)
+        public Edge(Vertex<T> source, Vertex<T> destination)
         {
             this.Source = source;
             this.Destination = destination;
-            this.Direction = direction;
         }
 
         public Edge(T source, T destination)

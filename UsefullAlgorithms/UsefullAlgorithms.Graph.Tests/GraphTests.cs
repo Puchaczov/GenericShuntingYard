@@ -124,7 +124,7 @@ namespace UsefullAlgorithms.Graph.Tests
         public void Graphs_CheckEdgeConnections()
         {
             Assert.IsFalse(g.HasEdge("A", "A"));
-            g.Connect("A", "A", new Edge<string>(g.GetByValue("A"), g.GetByValue("A"), Edge<string>.Relation.SelfConnected));
+            g.Connect("A", "A", new DirectedEdge<string>(g.GetByValue("A"), g.GetByValue("A"), Edge<string>.Relation.SelfConnected));
             Assert.IsTrue(g.HasEdge("A", "A"));
         }
 
@@ -136,9 +136,9 @@ namespace UsefullAlgorithms.Graph.Tests
 
             g.Add("A", "B", "C");
 
-            g.Connect("A", "B", new Edge<string>(g.GetByValue("A"), g.GetByValue("B"), Edge<string>.Relation.ParentToChild));
-            g.Connect("B", "A", new Edge<string>(g.GetByValue("B"), g.GetByValue("A"), Edge<string>.Relation.ChildToParent));
-            g.Connect("B", "B", new Edge<string>(g.GetByValue("B"), g.GetByValue("B"), Edge<string>.Relation.SelfConnected));
+            g.Connect("A", "B", new DirectedEdge<string>(g.GetByValue("A"), g.GetByValue("B"), Edge<string>.Relation.ParentToChild));
+            g.Connect("B", "A", new DirectedEdge<string>(g.GetByValue("B"), g.GetByValue("A"), Edge<string>.Relation.ChildToParent));
+            g.Connect("B", "B", new DirectedEdge<string>(g.GetByValue("B"), g.GetByValue("B"), Edge<string>.Relation.SelfConnected));
 
             Assert.AreEqual(true, g.HasCycle(g.GetByValue("A")));
         }
@@ -186,11 +186,11 @@ namespace UsefullAlgorithms.Graph.Tests
             g.Add("C");
             g.Add("D");
 
-            g.Connect("A", "B", new Edge<string>(g.GetByValue("A"), g.GetByValue("B"), Edge<string>.Relation.ParentToChild));
-            g.Connect("A", "C", new Edge<string>(g.GetByValue("A"), g.GetByValue("C"), Edge<string>.Relation.ParentToChild));
-            g.Connect("B", "C", new Edge<string>(g.GetByValue("B"), g.GetByValue("C"), Edge<string>.Relation.ParentToChild));
-            g.Connect("B", "D", new Edge<string>(g.GetByValue("B"), g.GetByValue("D"), Edge<string>.Relation.ParentToChild));
-            g.Connect("D", "A", new Edge<string>(g.GetByValue("D"), g.GetByValue("A"), Edge<string>.Relation.ParentToChild));
+            g.Connect("A", "B", new DirectedEdge<string>(g.GetByValue("A"), g.GetByValue("B"), Edge<string>.Relation.ParentToChild));
+            g.Connect("A", "C", new DirectedEdge<string>(g.GetByValue("A"), g.GetByValue("C"), Edge<string>.Relation.ParentToChild));
+            g.Connect("B", "C", new DirectedEdge<string>(g.GetByValue("B"), g.GetByValue("C"), Edge<string>.Relation.ParentToChild));
+            g.Connect("B", "D", new DirectedEdge<string>(g.GetByValue("B"), g.GetByValue("D"), Edge<string>.Relation.ParentToChild));
+            g.Connect("D", "A", new DirectedEdge<string>(g.GetByValue("D"), g.GetByValue("A"), Edge<string>.Relation.ParentToChild));
 
             return g;
         }
