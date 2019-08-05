@@ -8,6 +8,7 @@ namespace UsefullAlgorithms.Graph
     public class Graph<T, TEdge> : IEnumerable<Vertex<T>> where T : IEquatable<T> where TEdge : Edge<T>
     {
         private Dictionary<T, Vertex<T>> hashCodeLookup;
+        private Dictionary<long, Vertex<T>> _idHashCodeLookup;
         private Dictionary<Vertex<T>, LinkedList<Vertex<T>>> verticles;
         private Dictionary<Vertex<T>, LinkedList<TEdge>> edges;
         private ITraverseAlgorithmFactory<T, TEdge, Vertex<T>> traverseAlgorithm;
@@ -18,6 +19,7 @@ namespace UsefullAlgorithms.Graph
             verticles = new Dictionary<Vertex<T>, LinkedList<Vertex<T>>>(new VertexEqualityComparer<T>());
             edges = new Dictionary<Vertex<T>, LinkedList<TEdge>>(new VertexEqualityComparer<T>());
             hashCodeLookup = new Dictionary<T, Vertex<T>>();
+            _idHashCodeLookup = new Dictionary<long, Vertex<T>>();
             this.traverseAlgorithm = traverseAlgorithm;
             this.startPoint = startPoint;
         }
@@ -112,6 +114,9 @@ namespace UsefullAlgorithms.Graph
 
             if (!hashCodeLookup.ContainsKey(vertex.Data))
                 hashCodeLookup.Add(vertex.Data, vertex);
+
+            if (!_idHashCodeLookup.ContainsKey(vertex.Id))
+                _idHashCodeLookup.Add(vertex.Id, vertex);
         }
 
         public Vertex<T> Add(T item)
@@ -151,6 +156,8 @@ namespace UsefullAlgorithms.Graph
             edges.Remove(vertex);
 
             hashCodeLookup.Remove(vertex.Data);
+
+            _idHashCodeLookup.Remove(vertex.Id);
 
             var e = edges.SelectMany(f => f.Value.Where(x => x.Destination.Equals(vertex))).ToArray();
             
@@ -209,6 +216,8 @@ namespace UsefullAlgorithms.Graph
         public bool HasEdge(Vertex<T> source, Vertex<T> destination) => edges[source].Any(f => f.Destination.Data.Equals(destination.Data));
 
         public Vertex<T> GetByValue(T value) => hashCodeLookup[value];
+
+        public Vertex<T> GetById(long id) => _idHashCodeLookup[id];
 
         public bool HasCycle(Vertex<T> point)
         {

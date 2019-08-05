@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace UsefullAlgorithms.Graph
 {
-    [DebuggerDisplay("{Source.Data.ToString()} => {Destination.Data.ToString()} [{Direction}]")]
+    [DebuggerDisplay("{Source.Data.ToString()} => {Destination.Data.ToString()}")]
     public class Edge<T> where T: IEquatable<T>
     {
         public enum Relation
@@ -18,6 +18,7 @@ namespace UsefullAlgorithms.Graph
         }
 
         public Vertex<T> Source { get; }
+
         public Vertex<T> Destination { get; }
 
         public Edge(Vertex<T> source, Vertex<T> destination)

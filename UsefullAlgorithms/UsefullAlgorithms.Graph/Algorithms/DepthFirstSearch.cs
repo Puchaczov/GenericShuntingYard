@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace UsefullAlgorithms.Graph
+namespace UsefullAlgorithms.Graph.Algorithms
 {
     public class DepthFirstSearch<T, TEdge> : IEnumerator<Vertex<T>> where T : IEquatable<T> where TEdge : Edge<T>
     {

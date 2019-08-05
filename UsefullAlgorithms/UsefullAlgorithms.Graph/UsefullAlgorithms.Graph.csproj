@@ -37,6 +37,7 @@
     <!-- A reference to the entire .NET Framework is automatically included -->
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Algorithms\FindPathsSearch.cs" />
     <Compile Include="DefaultTraverseAlgorithFactory.cs" />
     <Compile Include="Algorithms\DepthFirstSearch.cs" />
     <Compile Include="Algorithms\BreadthFirstSearch.cs" />

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UsefullAlgorithms.Graph;
+using UsefullAlgorithms.Graph.Algorithms;
 
 namespace UsefullAlgorithms.ChainedExecution
 {

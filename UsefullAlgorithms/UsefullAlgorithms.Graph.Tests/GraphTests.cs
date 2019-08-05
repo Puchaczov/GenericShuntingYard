@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;
+using UsefullAlgorithms.Graph.Algorithms;
 
 namespace UsefullAlgorithms.Graph.Tests
 {
@@ -176,6 +177,30 @@ namespace UsefullAlgorithms.Graph.Tests
             Assert.AreEqual("ABCD", tOrder);
         }
 
+        [TestMethod]
+        public void Graphs_TestFindPathsSearch()
+        {
+            var graph = GetGraph();
+            var search = new UnknownTopologySearch<string, Edge<string>>();
+            var routes = search.FindRoutes(graph, graph.GetByValue("A"), graph.GetByValue("D"));
+        }
+
+        [TestMethod]
+        public void Graphs_TestFindPathsSearch2()
+        {
+            var graph = GetGraph();
+            var search = new UnknownTopologySearch<string, Edge<string>>();
+            var routes = search.FindRoutes(graph, graph.GetByValue("A"), graph.GetByValue("F"));
+        }
+
+        [TestMethod]
+        public void Graphs_TestFindPathsSearch3()
+        {
+            var graph = GetWeightedGraph();
+            var search = new DijkstraSearch<string, WeightedEdge<string>>();
+            var routes = search.FindRoutes(graph, graph.GetByValue("A"), graph.GetByValue("F"));
+        }
+
         private static Graph<string, Edge<string>> GetGraph()
         {
             Graph<string, Edge<string>> g = new Graph<string, Edge<string>>(
@@ -191,6 +216,52 @@ namespace UsefullAlgorithms.Graph.Tests
             g.Connect("B", "C", new DirectedEdge<string>(g.GetByValue("B"), g.GetByValue("C"), Edge<string>.Relation.ParentToChild));
             g.Connect("B", "D", new DirectedEdge<string>(g.GetByValue("B"), g.GetByValue("D"), Edge<string>.Relation.ParentToChild));
             g.Connect("D", "A", new DirectedEdge<string>(g.GetByValue("D"), g.GetByValue("A"), Edge<string>.Relation.ParentToChild));
+
+            return g;
+        }
+
+        private static Graph<string, Edge<string>> GetGraph2()
+        {
+            Graph<string, Edge<string>> g = new Graph<string, Edge<string>>(
+                new DefaultTraverseAlgorithFactory<string, Edge<string>>(DefaultTraverseAlgorithFactory<string, Edge<string>>.Algorithm.BreadthFirstSearch), "A");
+
+            g.Add("A");
+            g.Add("B");
+            g.Add("C");
+            g.Add("D");
+            g.Add("E");
+            g.Add("F");
+
+            g.Connect("A", "B", new DirectedEdge<string>(g.GetByValue("A"), g.GetByValue("B"), Edge<string>.Relation.ParentToChild));
+            g.Connect("A", "D", new DirectedEdge<string>(g.GetByValue("A"), g.GetByValue("D"), Edge<string>.Relation.ParentToChild));
+            g.Connect("B", "C", new DirectedEdge<string>(g.GetByValue("B"), g.GetByValue("C"), Edge<string>.Relation.ParentToChild));
+            g.Connect("D", "E", new DirectedEdge<string>(g.GetByValue("D"), g.GetByValue("E"), Edge<string>.Relation.ParentToChild));
+            g.Connect("E", "F", new DirectedEdge<string>(g.GetByValue("E"), g.GetByValue("F"), Edge<string>.Relation.ParentToChild));
+            g.Connect("D", "F", new DirectedEdge<string>(g.GetByValue("D"), g.GetByValue("F"), Edge<string>.Relation.ParentToChild));
+            g.Connect("C", "F", new DirectedEdge<string>(g.GetByValue("C"), g.GetByValue("F"), Edge<string>.Relation.ParentToChild));
+
+            return g;
+        }
+
+        private static Graph<string, WeightedEdge<string>> GetWeightedGraph()
+        {
+            Graph<string, WeightedEdge<string>> g = new Graph<string, WeightedEdge<string>>(
+                new DefaultTraverseAlgorithFactory<string, WeightedEdge<string>>(DefaultTraverseAlgorithFactory<string, WeightedEdge<string>>.Algorithm.BreadthFirstSearch), "A");
+
+            g.Add("A");
+            g.Add("B");
+            g.Add("C");
+            g.Add("D");
+            g.Add("E");
+            g.Add("F");
+
+            g.Connect("A", "B", new WeightedEdge<string>(5, g.GetByValue("A"), g.GetByValue("B")));
+            g.Connect("A", "D", new WeightedEdge<string>(1, g.GetByValue("A"), g.GetByValue("D")));
+            g.Connect("B", "C", new WeightedEdge<string>(1, g.GetByValue("B"), g.GetByValue("C")));
+            g.Connect("D", "E", new WeightedEdge<string>(1, g.GetByValue("D"), g.GetByValue("E")));
+            g.Connect("E", "F", new WeightedEdge<string>(1, g.GetByValue("E"), g.GetByValue("F")));
+            g.Connect("D", "F", new WeightedEdge<string>(3, g.GetByValue("D"), g.GetByValue("F")));
+            g.Connect("C", "F", new WeightedEdge<string>(1, g.GetByValue("C"), g.GetByValue("F")));
 
             return g;
         }

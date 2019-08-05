@@ -3,22 +3,35 @@ using System.Diagnostics;
 
 namespace UsefullAlgorithms.Graph
 {
+
     [DebuggerDisplay("{Data.ToString()}")]
     public class Vertex<T> : IComparable<Vertex<T>>, IComparable where T : IEquatable<T>
     {
+        private static long IdSeed;
+        private static readonly object IdGuard = new object();
+
+        public long Id { get; }
+
         public T Data { get; }
+
+        protected Vertex(T data, long id)
+        {
+            Data = data;
+            Id = id;
+        }
 
         public Vertex(T data)
         {
-            this.Data = data;
+            Data = data;
+            lock (IdGuard)
+                Id = IdSeed++;
         }
 
         public int CompareTo(Vertex<T> other)
         {
-            if (Data.Equals(other.Data))
+            if (Id == other.Id)
                 return 1;
-            else
-                return -1;
+            return -1;
         }
 
         public int CompareTo(object obj)
@@ -29,6 +42,11 @@ namespace UsefullAlgorithms.Graph
                 return CompareTo((Vertex<T>)obj);
 
             throw new ArgumentException($"Object is not of type {nameof(T)}");
+        }
+
+        public override int GetHashCode()
+        {
+            return Id.GetHashCode();
         }
     }
 }

@@ -8,14 +8,12 @@ namespace UsefullAlgorithms.Graph
 {
     public class WeightedEdge<T> : Edge<T> where T : IEquatable<T>
     {
-        private readonly int weight;
-
-        public WeightedEdge(int weight, Vertex<T> source, Vertex<T> destination, Relation direction)
+        public WeightedEdge(double weight, Vertex<T> source, Vertex<T> destination)
             : base(source, destination)
         {
-            this.weight = weight;
+            Weight = weight;
         }
 
-        public int Weight => weight;
+        public double Weight { get; }
     }
 }
