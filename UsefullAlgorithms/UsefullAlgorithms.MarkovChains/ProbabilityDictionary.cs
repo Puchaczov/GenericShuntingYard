@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace UsefullAlgorithms.MarkovChains
 {
-    public class ProbablityDictionary<T> : Dictionary<T, double>
+    public class ProbabilityDictionary<T> : Dictionary<T, double>
     {
         private readonly List<(double Min, double Max, T Key)> _ranges = new List<(double, double, T)>();
 

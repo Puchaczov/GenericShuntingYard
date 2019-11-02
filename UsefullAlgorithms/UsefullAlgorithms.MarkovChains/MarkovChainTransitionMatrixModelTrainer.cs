@@ -27,7 +27,7 @@ namespace UsefullAlgorithms.MarkovChains
 
             foreach (var row in occurencesDict)
             {
-                var probabilityDictionary = new ProbablityDictionary<T>();
+                var probabilityDictionary = new ProbabilityDictionary<T>();
 
                 matrix.Add(row.Key, probabilityDictionary);
 

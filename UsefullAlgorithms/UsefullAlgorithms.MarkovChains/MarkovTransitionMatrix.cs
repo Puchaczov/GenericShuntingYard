@@ -2,7 +2,7 @@
 
 namespace UsefullAlgorithms.MarkovChains
 {
-    public class MarkovTransitionMatrix<T> : Dictionary<T, ProbablityDictionary<T>>
+    public class MarkovTransitionMatrix<T> : Dictionary<T, ProbabilityDictionary<T>>
     {
     }
 }
