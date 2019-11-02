@@ -15,13 +15,13 @@ namespace UsefullAlgorithms.Graph.Algorithms
         private readonly List<Vertex<T>> visited;
         private readonly bool ignoreCycles;
 
-        public DepthFirstSearch(Graph<T, TEdge> graph, T root, bool v)
+        public DepthFirstSearch(Graph<T, TEdge> graph, T root, bool ignoreCycles)
         {
             this.graph = graph;
             this.node = graph.GetByValue(root);
             stack = new Stack<Vertex<T>>();
             visited = new List<Vertex<T>>();
-            this.ignoreCycles = v;
+            this.ignoreCycles = ignoreCycles;
 
             Reset();
         }
@@ -40,7 +40,6 @@ namespace UsefullAlgorithms.Graph.Algorithms
             {
                 var vert = stack.Pop();
 
-                var tmpStack = new Stack<Vertex<T>>();
                 foreach(var desc in graph.GetAdjacents(vert))
                 {
                     if (vert.Data.Equals(desc.Data))
@@ -52,12 +51,7 @@ namespace UsefullAlgorithms.Graph.Algorithms
                     if (stack.Any(f => f.Data.Equals(desc.Data)))
                         continue;
 
-                    tmpStack.Push(desc);
-                }
-
-                while(tmpStack.Count > 0)
-                {
-                    stack.Push(tmpStack.Pop());
+                    stack.Push(desc);
                 }
 
                 visited.Add(vert);

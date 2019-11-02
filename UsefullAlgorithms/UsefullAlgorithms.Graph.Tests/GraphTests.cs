@@ -19,7 +19,7 @@ namespace UsefullAlgorithms.Graph.Tests
         [TestMethod]
         public void Graphs_CheckCounts()
         {
-            Assert.AreEqual(4, g.VerticlesCount);
+            Assert.AreEqual(4, g.VerticesCount);
             Assert.AreEqual(5, g.EdgesCount);
         }
 
@@ -102,8 +102,7 @@ namespace UsefullAlgorithms.Graph.Tests
         [TestMethod]
         public void Graphs_CheckAddition()
         {
-            Graph<string, Edge<string>> g = new Graph<string, Edge<string>>(
-                new DefaultTraverseAlgorithFactory<string, Edge<string>>(DefaultTraverseAlgorithFactory<string, Edge<string>>.Algorithm.BreadthFirstSearch), "A");
+            Graph<string, Edge<string>> g = new Graph<string, Edge<string>>();
 
             g.Add("F");
 
@@ -132,8 +131,7 @@ namespace UsefullAlgorithms.Graph.Tests
         [TestMethod]
         public void Graphs_HasCycles()
         {
-            g = new Graph<string, Edge<string>>(
-                new DefaultTraverseAlgorithFactory<string, Edge<string>>(DefaultTraverseAlgorithFactory<string, Edge<string>>.Algorithm.BreadthFirstSearch), "A");
+            g = new Graph<string, Edge<string>>();
 
             g.Add("A", "B", "C");
 
@@ -147,31 +145,30 @@ namespace UsefullAlgorithms.Graph.Tests
         [TestMethod]
         public void Graphs_TestDepthFirstSearchTraverse()
         {
-            g.TraverseAlgorithm = new DefaultTraverseAlgorithFactory<string, Edge<string>>(DefaultTraverseAlgorithFactory<string, Edge<string>>.Algorithm.DepthFirstSearch);
             g.Remove(g.GetEdge("B", "C"));
 
             string tOrder = string.Empty;
 
-
-            foreach(var node in g)
+            var enumerator = g.GetEnumerator(f => new DepthFirstSearch<string, Edge<string>>(f, "A", true));
+            while (enumerator.MoveNext())
             {
-                tOrder += node.Data;
+                tOrder += enumerator.Current.Data;
             }
 
-            Assert.AreEqual("ABDC", tOrder);
+            Assert.AreEqual("ACBD", tOrder);
         }
 
         [TestMethod]
         public void Graphs_TestBreadthFirstSearchTraverse()
         {
-            g.TraverseAlgorithm = new DefaultTraverseAlgorithFactory<string, Edge<string>>(DefaultTraverseAlgorithFactory<string, Edge<string>>.Algorithm.BreadthFirstSearch);
             g.Remove(g.GetEdge("B", "C"));
 
             string tOrder = string.Empty;
 
-            foreach(var node in g)
+            var enumerator = g.GetEnumerator(f => new BreadthFirstSearch<string, Edge<string>>(f, "A", true));
+            while (enumerator.MoveNext())
             {
-                tOrder += node.Data;
+                tOrder += enumerator.Current.Data;
             }
 
             Assert.AreEqual("ABCD", tOrder);
@@ -186,14 +183,6 @@ namespace UsefullAlgorithms.Graph.Tests
         }
 
         [TestMethod]
-        public void Graphs_TestFindPathsSearch2()
-        {
-            var graph = GetGraph();
-            var search = new UnknownTopologySearch<string, Edge<string>>();
-            var routes = search.FindRoutes(graph, graph.GetByValue("A"), graph.GetByValue("F"));
-        }
-
-        [TestMethod]
         public void Graphs_TestFindPathsSearch3()
         {
             var graph = GetWeightedGraph();
@@ -203,8 +192,7 @@ namespace UsefullAlgorithms.Graph.Tests
 
         private static Graph<string, Edge<string>> GetGraph()
         {
-            Graph<string, Edge<string>> g = new Graph<string, Edge<string>>(
-                new DefaultTraverseAlgorithFactory<string, Edge<string>>(DefaultTraverseAlgorithFactory<string, Edge<string>>.Algorithm.BreadthFirstSearch), "A");
+            Graph<string, Edge<string>> g = new Graph<string, Edge<string>>();
 
             g.Add("A");
             g.Add("B");
@@ -220,33 +208,9 @@ namespace UsefullAlgorithms.Graph.Tests
             return g;
         }
 
-        private static Graph<string, Edge<string>> GetGraph2()
-        {
-            Graph<string, Edge<string>> g = new Graph<string, Edge<string>>(
-                new DefaultTraverseAlgorithFactory<string, Edge<string>>(DefaultTraverseAlgorithFactory<string, Edge<string>>.Algorithm.BreadthFirstSearch), "A");
-
-            g.Add("A");
-            g.Add("B");
-            g.Add("C");
-            g.Add("D");
-            g.Add("E");
-            g.Add("F");
-
-            g.Connect("A", "B", new DirectedEdge<string>(g.GetByValue("A"), g.GetByValue("B"), Edge<string>.Relation.ParentToChild));
-            g.Connect("A", "D", new DirectedEdge<string>(g.GetByValue("A"), g.GetByValue("D"), Edge<string>.Relation.ParentToChild));
-            g.Connect("B", "C", new DirectedEdge<string>(g.GetByValue("B"), g.GetByValue("C"), Edge<string>.Relation.ParentToChild));
-            g.Connect("D", "E", new DirectedEdge<string>(g.GetByValue("D"), g.GetByValue("E"), Edge<string>.Relation.ParentToChild));
-            g.Connect("E", "F", new DirectedEdge<string>(g.GetByValue("E"), g.GetByValue("F"), Edge<string>.Relation.ParentToChild));
-            g.Connect("D", "F", new DirectedEdge<string>(g.GetByValue("D"), g.GetByValue("F"), Edge<string>.Relation.ParentToChild));
-            g.Connect("C", "F", new DirectedEdge<string>(g.GetByValue("C"), g.GetByValue("F"), Edge<string>.Relation.ParentToChild));
-
-            return g;
-        }
-
         private static Graph<string, WeightedEdge<string>> GetWeightedGraph()
         {
-            Graph<string, WeightedEdge<string>> g = new Graph<string, WeightedEdge<string>>(
-                new DefaultTraverseAlgorithFactory<string, WeightedEdge<string>>(DefaultTraverseAlgorithFactory<string, WeightedEdge<string>>.Algorithm.BreadthFirstSearch), "A");
+            Graph<string, WeightedEdge<string>> g = new Graph<string, WeightedEdge<string>>();
 
             g.Add("A");
             g.Add("B");

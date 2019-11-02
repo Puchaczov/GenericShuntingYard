@@ -8,9 +8,7 @@ namespace UsefullAlgorithms.Graph.Algorithms
     public class BreadthFirstSearch<T, TEdge> : IEnumerator<Vertex<T>> where T : IEquatable<T> where TEdge : Edge<T>
     {
         private readonly Graph<T, TEdge> graph;
-
         private readonly Vertex<T> node;
-        private Vertex<T> current;
         private readonly Queue<Vertex<T>> queue;
         private readonly List<Vertex<T>> visited;
         private readonly bool ignoreCycles;
@@ -26,7 +24,7 @@ namespace UsefullAlgorithms.Graph.Algorithms
             this.Reset();
         }
 
-        public Vertex<T> Current => current;
+        public Vertex<T> Current { get; private set; }
 
         object IEnumerator.Current => Current;
 
@@ -34,7 +32,7 @@ namespace UsefullAlgorithms.Graph.Algorithms
 
         public bool MoveNext()
         {
-            current = null;
+            Current = null;
 
             while (queue.Count > 0)
             {
@@ -55,7 +53,7 @@ namespace UsefullAlgorithms.Graph.Algorithms
                 }
 
                 visited.Add(vert);
-                current = vert;
+                Current = vert;
                 return true;
             }
 
@@ -64,10 +62,10 @@ namespace UsefullAlgorithms.Graph.Algorithms
 
         public void Reset()
         {
-            current = node;
+            Current = node;
             queue.Clear();
             visited.Clear();
-            queue.Enqueue(current);
+            queue.Enqueue(Current);
         }
     }
 }

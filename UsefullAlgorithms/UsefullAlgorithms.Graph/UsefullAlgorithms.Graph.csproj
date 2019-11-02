@@ -37,13 +37,17 @@
     <!-- A reference to the entire .NET Framework is automatically included -->
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Algorithms\FindPathsSearch.cs" />
+    <Compile Include="Algorithms\DijkstraSearch.cs" />
+    <Compile Include="Algorithms\ISearch.cs" />
+    <Compile Include="Route.cs" />
+    <Compile Include="Algorithms\UnknownTopologySearch.cs" />
     <Compile Include="DefaultTraverseAlgorithFactory.cs" />
     <Compile Include="Algorithms\DepthFirstSearch.cs" />
     <Compile Include="Algorithms\BreadthFirstSearch.cs" />
     <Compile Include="DirectedEdge.cs" />
     <Compile Include="Edge.cs" />
     <Compile Include="Graph.cs" />
+    <Compile Include="GraphExtension.cs" />
     <Compile Include="ITraverseAlgorithmFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Vertex.cs" />

@@ -1,54 +1,26 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace UsefullAlgorithms.Graph
 {
-    public class Graph<T, TEdge> : IEnumerable<Vertex<T>> where T : IEquatable<T> where TEdge : Edge<T>
+
+    public class Graph<T, TEdge> where T : IEquatable<T> where TEdge : Edge<T>
     {
-        private Dictionary<T, Vertex<T>> hashCodeLookup;
-        private Dictionary<long, Vertex<T>> _idHashCodeLookup;
-        private Dictionary<Vertex<T>, LinkedList<Vertex<T>>> verticles;
-        private Dictionary<Vertex<T>, LinkedList<TEdge>> edges;
-        private ITraverseAlgorithmFactory<T, TEdge, Vertex<T>> traverseAlgorithm;
-        private T startPoint;
+        private readonly Dictionary<T, Vertex<T>> _hashCodeLookup;
+        private readonly Dictionary<long, Vertex<T>> _idHashCodeLookup;
+        private readonly Dictionary<Vertex<T>, LinkedList<Vertex<T>>> _vertices;
+        private readonly Dictionary<Vertex<T>, LinkedList<TEdge>> _edges;
 
-        public Graph(ITraverseAlgorithmFactory<T, TEdge, Vertex<T>> traverseAlgorithm, T startPoint)
+        public Graph()
         {
-            verticles = new Dictionary<Vertex<T>, LinkedList<Vertex<T>>>(new VertexEqualityComparer<T>());
-            edges = new Dictionary<Vertex<T>, LinkedList<TEdge>>(new VertexEqualityComparer<T>());
-            hashCodeLookup = new Dictionary<T, Vertex<T>>();
+            _vertices = new Dictionary<Vertex<T>, LinkedList<Vertex<T>>>(new VertexEqualityComparer<T>());
+            _edges = new Dictionary<Vertex<T>, LinkedList<TEdge>>(new VertexEqualityComparer<T>());
+            _hashCodeLookup = new Dictionary<T, Vertex<T>>();
             _idHashCodeLookup = new Dictionary<long, Vertex<T>>();
-            this.traverseAlgorithm = traverseAlgorithm;
-            this.startPoint = startPoint;
         }
 
-        public T StartPoint
-        {
-            get
-            {
-                return startPoint;
-            }
-            set
-            {
-                startPoint = value;
-            }
-        }
-
-        public ITraverseAlgorithmFactory<T, TEdge, Vertex<T>> TraverseAlgorithm
-        {
-            get
-            {
-                return traverseAlgorithm;
-            }
-            set
-            {
-                traverseAlgorithm = value;
-            }
-        }
-
-        public int VerticlesCount => verticles.Count;
+        public int VerticesCount => _vertices.Count;
 
         public int EdgesCount
         {
@@ -56,7 +28,7 @@ namespace UsefullAlgorithms.Graph
             {
                 var p = 0;
 
-                foreach (var item in edges)
+                foreach (var item in _edges)
                 {
                     p += item.Value.Count;
                 }
@@ -65,33 +37,38 @@ namespace UsefullAlgorithms.Graph
             }
         }
 
+        public IEnumerable<Vertex<T>> GetVertices()
+        {
+            return _hashCodeLookup.Values;
+        }
+
         public IEnumerable<Vertex<T>> GetAdjacents(T data) => GetAdjacents(GetByValue(data));
 
         public IEnumerable<Vertex<T>> GetAdjacents(Vertex<T> vertex)
         {
-            if (!verticles.ContainsKey(vertex))
+            if (!_vertices.ContainsKey(vertex))
                 throw new NotSupportedException();
 
-            return verticles[vertex];
+            return _vertices[vertex];
         }
 
         public IEnumerable<TEdge> GetEdges(T data) => GetEdges(GetByValue(data));
 
         public IEnumerable<TEdge> GetEdges(Vertex<T> vertex)
         {
-            if (!verticles.ContainsKey(vertex))
+            if (!_vertices.ContainsKey(vertex))
                 throw new NotSupportedException();
 
-            return edges[vertex];
+            return _edges[vertex];
         }
 
         public TEdge GetEdge(T first, T second)
         {
-            if (!hashCodeLookup.ContainsKey(first))
-                return default(TEdge);
+            if (!_hashCodeLookup.ContainsKey(first))
+                return null;
 
-            if (!hashCodeLookup.ContainsKey(second))
-                return default(TEdge);
+            if (!_hashCodeLookup.ContainsKey(second))
+                return null;
 
             return GetEdge(GetByValue(first), GetByValue(second));
         }
@@ -101,33 +78,30 @@ namespace UsefullAlgorithms.Graph
             if (!HasVertex(first))
                 return null;
 
-            return edges[first].SingleOrDefault(f => f.Destination.Data.Equals(second.Data));
+            return _edges[first].SingleOrDefault(f => f.Destination.Data.Equals(second.Data));
         }
 
         public void Add(Vertex<T> vertex)
         {
-            if (!verticles.ContainsKey(vertex))
-                verticles.Add(vertex, new LinkedList<Vertex<T>>());
+            if (!_vertices.ContainsKey(vertex))
+                _vertices.Add(vertex, new LinkedList<Vertex<T>>());
 
-            if (!edges.ContainsKey(vertex))
-                edges.Add(vertex, new LinkedList<TEdge>());
+            if (!_edges.ContainsKey(vertex))
+                _edges.Add(vertex, new LinkedList<TEdge>());
 
-            if (!hashCodeLookup.ContainsKey(vertex.Data))
-                hashCodeLookup.Add(vertex.Data, vertex);
+            if (!_hashCodeLookup.ContainsKey(vertex.Data))
+                _hashCodeLookup.Add(vertex.Data, vertex);
 
             if (!_idHashCodeLookup.ContainsKey(vertex.Id))
                 _idHashCodeLookup.Add(vertex.Id, vertex);
         }
 
-        public Vertex<T> Add(T item)
+        public void Add(T item)
         {
-            if (hashCodeLookup.ContainsKey(item))
-                return hashCodeLookup[item];
+            if (_hashCodeLookup.ContainsKey(item)) return;
 
             var v = new Vertex<T>(item);
             Add(v);
-
-            return v;
         }
 
         public void Add(params T[] items)
@@ -146,39 +120,39 @@ namespace UsefullAlgorithms.Graph
             if (!HasVertex(vertex))
                 return;
 
-            foreach(var item in verticles)
+            foreach(var item in _vertices)
             {
                 if(item.Value.Contains(vertex))
                     item.Value.Remove(vertex);
             }
 
-            verticles.Remove(vertex);
-            edges.Remove(vertex);
+            _vertices.Remove(vertex);
+            _edges.Remove(vertex);
 
-            hashCodeLookup.Remove(vertex.Data);
+            _hashCodeLookup.Remove(vertex.Data);
 
             _idHashCodeLookup.Remove(vertex.Id);
 
-            var e = edges.SelectMany(f => f.Value.Where(x => x.Destination.Equals(vertex))).ToArray();
+            var e = _edges.SelectMany(f => f.Value.Where(x => x.Destination.Equals(vertex))).ToArray();
             
             foreach(var edge in e)
             {
-                edges[edge.Source].Remove(edge);
+                _edges[edge.Source].Remove(edge);
             }
         }
 
         public void Remove(TEdge edge)
         {
-            edges[edge.Source].Remove(edge);
-            edges[edge.Destination].Remove(edge);
+            _edges[edge.Source].Remove(edge);
+            _edges[edge.Destination].Remove(edge);
         }
 
         public void Connect(Vertex<T> from, Vertex<T> to, TEdge edge)
         {
-            if (!verticles.ContainsKey(from))
+            if (!_vertices.ContainsKey(from))
                 throw new InvalidOperationException();
 
-            if (HasVerticle(verticles[from], to))
+            if (HasVertex(_vertices[from], to))
                 throw new InvalidOperationException();
 
             if (edge.Source != from)
@@ -187,8 +161,8 @@ namespace UsefullAlgorithms.Graph
             if (edge.Destination != to)
                 throw new InvalidOperationException();
 
-            verticles[from].AddLast(to);
-            edges[from].AddLast(edge);
+            _vertices[from].AddLast(to);
+            _edges[from].AddLast(edge);
         }
 
         public void Connect(T from, T to, TEdge edge)
@@ -205,17 +179,17 @@ namespace UsefullAlgorithms.Graph
             }
         }
 
-        private bool HasVerticle(LinkedList<Vertex<T>> vertices, Vertex<T> vertex) => vertices.Contains(vertex);
+        private bool HasVertex(ICollection<Vertex<T>> vertices, Vertex<T> vertex) => vertices.Contains(vertex);
 
-        public bool HasVertex(Vertex<T> v) => hashCodeLookup.ContainsKey(v.Data);
+        public bool HasVertex(Vertex<T> vertex) => _hashCodeLookup.ContainsKey(vertex.Data);
 
-        public bool HasVertex(T data) => hashCodeLookup.ContainsKey(data);
+        public bool HasVertex(T data) => _hashCodeLookup.ContainsKey(data);
 
-        public bool HasEdge(T source, T Destination) => HasEdge(GetByValue(source), GetByValue(Destination));
+        public bool HasEdge(T source, T destination) => HasEdge(GetByValue(source), GetByValue(destination));
 
-        public bool HasEdge(Vertex<T> source, Vertex<T> destination) => edges[source].Any(f => f.Destination.Data.Equals(destination.Data));
+        public bool HasEdge(Vertex<T> source, Vertex<T> destination) => _edges[source].Any(f => f.Destination.Data.Equals(destination.Data));
 
-        public Vertex<T> GetByValue(T value) => hashCodeLookup[value];
+        public Vertex<T> GetByValue(T value) => _hashCodeLookup[value];
 
         public Vertex<T> GetById(long id) => _idHashCodeLookup[id];
 
@@ -224,15 +198,15 @@ namespace UsefullAlgorithms.Graph
             if (!HasVertex(point))
                 return false;
 
-            Stack<Vertex<T>> s = new Stack<Vertex<T>>();
-            SortedSet<Vertex<T>> visited = new SortedSet<Vertex<T>>();
+            var s = new Stack<Vertex<T>>();
+            var visited = new SortedSet<Vertex<T>>();
 
             s.Push(point);
             while(s.Count > 0)
             {
                 var node = s.Pop();
 
-                foreach (var desc in this.GetAdjacents(node))
+                foreach (var desc in GetAdjacents(node))
                 {
                     if (node.Data.Equals(desc.Data))
                         return true;
@@ -251,13 +225,5 @@ namespace UsefullAlgorithms.Graph
 
             return false;
         }
-
-        public IEnumerator<Vertex<T>> GetEnumerator(Func<Graph<T, TEdge>, IEnumerator<Vertex<T>>> f) => f(this);
-
-        public IEnumerator<Vertex<T>> TraverseBy(T startFrom, Func<Graph<T, TEdge>, T, IEnumerator<Vertex<T>>> f) => f(this, startFrom);
-
-        public IEnumerator<Vertex<T>> GetEnumerator() => traverseAlgorithm.Create(this, startPoint);
-
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
 }

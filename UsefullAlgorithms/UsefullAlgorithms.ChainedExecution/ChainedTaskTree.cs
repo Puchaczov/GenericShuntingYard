@@ -9,10 +9,10 @@ namespace UsefullAlgorithms.ChainedExecution
 {
     internal class ChainedTaskTree : IEnumerable<ExecutionTaskInfo>
     {
-        private Graph<ExecutionTaskInfo, DirectedEdge> graph;
+        private readonly Graph<ExecutionTaskInfo, DirectedEdge> graph;
         private ExecutionTaskInfo root;
 
-        public int Count => graph.VerticlesCount;
+        public int Count => graph.VerticesCount;
         public int CountOfWaitingToBeQueued
         {
             get
@@ -32,7 +32,7 @@ namespace UsefullAlgorithms.ChainedExecution
 
         public ChainedTaskTree()
         {
-            this.graph = new Graph<ExecutionTaskInfo, DirectedEdge>(new DefaultTraverseAlgorithFactory<ExecutionTaskInfo, DirectedEdge>(DefaultTraverseAlgorithFactory<ExecutionTaskInfo, DirectedEdge>.Algorithm.BreadthFirstSearch), null);
+            this.graph = new Graph<ExecutionTaskInfo, DirectedEdge>();
         }
 
         public void SetRoot(ExecutionTaskInfo task)
